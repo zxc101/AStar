@@ -4,78 +4,96 @@ using UnityEngine;
 
 public class Grid : MonoBehaviour
 {
-    const int ACCURACY = 18;
+    private const int ACCURACY = 18;
+    private const float NODE_RADIUS = 0.1f;
+    private const float NODE_DIAMETER = 0.2f;
+    private const float NODE_INTERVAL = 0.01f;
 
     public bool onlyDisplayPathGizmos;
     public Vector3 gridWorldSize;
     public List<Node> path;
 
-    [SerializeField] private LayerMask unwalkableMask;
+    //[SerializeField] private LayerMask unwalkableMask;
 
-    private float nodeRadius;
-    private float nodeDiameter;
+    //private float nodeRadius;
+    //private float nodeDiameter;
     private int gridSizeX, gridSizeY, gridSizeZ;
     private Node[,,] grid;
 
     public int MaxSize { get => gridSizeX * gridSizeY * gridSizeZ; }
-    public float NodeRadius { get => nodeRadius; }
-    public LayerMask UnwalkableMask { get => unwalkableMask; }
+    public float NodeRadius { get => NODE_RADIUS; }
+    public LayerMask UnwalkableMask { get => 1 << LayerMask.NameToLayer("Frame"); }
 
     private void Start()
     {
         CreateGrid();
+        CreateGridArray();
     }
 
+    /// <summary>
+    /// Составление размера grid-a и его позиции
+    /// </summary>
     private void CreateGrid()
     {
-        //Pathfinding pathfinding;
-        //Vector3 seeker;
-        //Vector3 target;
+        ///// Составление размера grid-a и его позиции /////
+        
+        Pathfinding pathfinding;
+        Vector3 seeker;
+        Vector3 target;
 
-        //if (GetComponent<Pathfinding>())
-        //{
-        //    pathfinding = GetComponent<Pathfinding>();
-        //    seeker = pathfinding.seeker.position;
-        //    target = pathfinding.target.position;
-        //    Debug.Log($"Seeker: {seeker}");
-        //    Debug.Log($"Tar+get: {target}");
-        //}
-        //else
-        //{
-        //    Debug.Log("Pathfinding doesn't found");
-        //    return;
-        //}
+        if (GetComponent<Pathfinding>())
+        {
+            pathfinding = GetComponent<Pathfinding>();
+            seeker = pathfinding.seeker.position;
+            target = pathfinding.target.position;
+        }
+        else
+        {
+            Debug.Log("Pathfinding doesn't found");
+            return;
+        }
 
-        //transform.position = new Vector3((seeker.x + target.x) / 2, 0, (seeker.z + target.z) / 2);
-        //gridWorldSize = new Vector3(Mathf.Abs(seeker.x) + Mathf.Abs(target.x), gridWorldSize.y, Mathf.Abs(seeker.z) + Mathf.Abs(target.z));
+        transform.position = new Vector3((seeker.x + target.x) / 2, (seeker.y + target.y) / 2, (seeker.z + target.z) / 2);
+        gridWorldSize = new Vector3(Mathf.Abs(seeker.x) + Mathf.Abs(target.x), Mathf.Abs(seeker.y) + Mathf.Abs(target.y), Mathf.Abs(seeker.z) + Mathf.Abs(target.z));
+    }
 
-        nodeRadius = gridWorldSize.x * gridWorldSize.y * gridWorldSize.z / ACCURACY;
-        Debug.Log(nodeRadius);
-        nodeDiameter = nodeRadius * 2;
+    /// <summary>
+    /// Составление размера массива grid
+    /// </summary>
+    private void CreateGridArray()
+    {
+        //nodeRadius = gridWorldSize.x * gridWorldSize.y * gridWorldSize.z / ACCURACY;
 
-        gridSizeX = Mathf.RoundToInt(gridWorldSize.x / nodeDiameter);
-        gridSizeY = Mathf.RoundToInt(gridWorldSize.y / nodeDiameter);
-        gridSizeZ = Mathf.RoundToInt(gridWorldSize.z / nodeDiameter);
-        Debug.Log(gridSizeX);
-        Debug.Log(gridSizeY);
-        Debug.Log(gridSizeZ);
+        //nodeDiameter = NODE_RADIUS * 2;
+
+        gridSizeX = Mathf.RoundToInt(gridWorldSize.x / NODE_DIAMETER);
+        gridSizeY = Mathf.RoundToInt(gridWorldSize.y / NODE_DIAMETER);
+        gridSizeZ = Mathf.RoundToInt(gridWorldSize.z / NODE_DIAMETER);
+
         grid = new Node[gridSizeX, gridSizeY, gridSizeZ];
 
-        Vector3 worldBottomLeft = transform.position - Vector3.right * gridWorldSize.x/2 - Vector3.up * gridWorldSize.y/ 2 - Vector3.forward * gridWorldSize.z / 2;
+        ///// заполнение массива grid /////
+
+        Vector3 worldBottomLeft = transform.position - Vector3.right * gridWorldSize.x / 2 - Vector3.up * gridWorldSize.y / 2 - Vector3.forward * gridWorldSize.z / 2;
         for (int x = 0; x < gridSizeX; x++)
         {
             for (int y = 0; y < gridSizeY; y++)
             {
                 for (int z = 0; z < gridSizeZ; z++)
                 {
-                    Vector3 worldPoint = worldBottomLeft + Vector3.right * (x * nodeDiameter + nodeRadius) + Vector3.up * (y * nodeDiameter + nodeRadius + .01f) + Vector3.forward * (z * nodeDiameter + nodeRadius);
-                    bool walkable = !(Physics.CheckSphere(worldPoint, nodeRadius, unwalkableMask));
+                    Vector3 worldPoint = worldBottomLeft + Vector3.right * (x * NODE_DIAMETER + NODE_RADIUS) + Vector3.up * (y * NODE_DIAMETER + NODE_RADIUS + NODE_INTERVAL) + Vector3.forward * (z * NODE_DIAMETER + NODE_RADIUS);
+                    bool walkable = !(Physics.CheckSphere(worldPoint, NODE_RADIUS, UnwalkableMask));
                     grid[x, y, z] = new Node(walkable, worldPoint, x, y, z);
                 }
             }
         }
     }
 
+    /// <summary>
+    /// Возвращает List из соседних клеток
+    /// </summary>
+    /// <param name="node">Проверяемая клетка</param>
+    /// <returns>Клетки по соседству</returns>
     public List<Node> GetNeighbours(Node node)
     {
         List<Node> neighbours = new List<Node>();
@@ -108,6 +126,11 @@ public class Grid : MonoBehaviour
         return neighbours;
     }
 
+    /// <summary>
+    /// Находит Node соответствующий заданной позиции
+    /// </summary>
+    /// <param name="worldPosition">Позиция в мировых координатах</param>
+    /// <returns>Node соответствующий заданной позиции</returns>
     public Node NodeFromWorldPosition(Vector3 worldPosition)
     {
         float percentX = (worldPosition.x + gridWorldSize.x / 2) / gridWorldSize.x;
@@ -127,15 +150,17 @@ public class Grid : MonoBehaviour
 
     private void OnDrawGizmos()
     {
+        // Отрисовывае куб в котором будет происходить всё действо
         Gizmos.DrawWireCube(transform.position, new Vector3(gridWorldSize.x, gridWorldSize.y, gridWorldSize.z));
         if (onlyDisplayPathGizmos)
         {
+            // Показывает только клетки пути
             if (path != null)
             {
                 foreach(Node n in path)
                 {
                     Gizmos.color = new Color(255, 247, 157);
-                    Gizmos.DrawCube(n.worldPosition, Vector3.one * (nodeDiameter - .01f));
+                    Gizmos.DrawCube(n.worldPosition, Vector3.one * (NODE_DIAMETER - NODE_INTERVAL));
                 }
             }
     }
@@ -145,15 +170,19 @@ public class Grid : MonoBehaviour
             {
                 foreach (Node n in grid)
                 {
+                    // Если по клетке можно пройти то отображаем как пустую иначе как не годную для ходьбы
                     Gizmos.color = (n.walkable)? Color.white : Color.red;
+
+                    // Если путь найден
                     if (path != null)
                     {
+                        // и ячейка соответствует ячейки пути
                         if (path.Contains(n))
-                        {
+                            // Меняем цвет клетки
                             Gizmos.color = new Color(255, 247, 157);
-}
                     }
-                    Gizmos.DrawCube(n.worldPosition, Vector3.one* (nodeDiameter - .01f));
+                    // Рисуем
+                    Gizmos.DrawCube(n.worldPosition, Vector3.one* (NODE_DIAMETER - NODE_INTERVAL));
                 }
             }
         }

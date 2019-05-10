@@ -5,39 +5,52 @@ using System;
 
 public class Heap<T> where T : IHeapItem<T>
 {
-    T[] items;
-    int currentItemCount;
+    private T[] items;
+    private int count;
 
     public Heap(int maxHeapSize)
     {
         items = new T[maxHeapSize];
     }
 
+    /// <summary>
+    /// Добавляет элемент в кучу
+    /// </summary>
+    /// <param name="item">Элемент</param>
     public void Add(T item)
     {
-        item.HeapIndex = currentItemCount;
-        items[currentItemCount] = item;
+        item.HeapIndex = count;
+        items[count] = item;
         SortUp(item);
-        currentItemCount++;
+        count++;
     }
 
+    /// <summary>
+    /// Берёт первый элемент из кучи
+    /// </summary>
+    /// <returns>Элемент</returns>
     public T RemoveFirst()
     {
         T firstItem = items[0];
-        currentItemCount--;
-        items[0] = items[currentItemCount];
+        count--;
+        items[0] = items[count];
         items[0].HeapIndex = 0;
         SortDown(items[0]);
         return firstItem;
     }
 
-    public void UpdateItem(T item)
-    {
-        SortUp(item);
-    }
+    //public void UpdateItem(T item)
+    //{
+    //    SortUp(item);
+    //}
 
-    public int Count { get => currentItemCount; }
+    public int Count { get => count; }
 
+    /// <summary>
+    /// Проверяет элементы на сходство
+    /// </summary>
+    /// <param name="item">Элемент</param>
+    /// <returns></returns>
     public bool Contains(T item)
     {
         return Equals(items[item.HeapIndex], item);
@@ -51,11 +64,11 @@ public class Heap<T> where T : IHeapItem<T>
             int childIndexRight = item.HeapIndex * 2 + 2;
             int swapIndex = 0;
 
-            if(childIndexLeft < currentItemCount)
+            if(childIndexLeft < count)
             {
                 swapIndex = childIndexLeft;
 
-                if(childIndexRight < currentItemCount)
+                if(childIndexRight < count)
                 {
                     if(items[childIndexLeft].CompareTo(items[childIndexRight]) < 0)
                     {
@@ -99,6 +112,11 @@ public class Heap<T> where T : IHeapItem<T>
         }
     }
 
+    /// <summary>
+    /// Меняет элементы местами
+    /// </summary>
+    /// <param name="itemA">Первый элемент</param>
+    /// <param name="itemB">Второй элемент</param>
     private void Swap(T itemA, T itemB)
     {
         items[itemA.HeapIndex] = itemB;

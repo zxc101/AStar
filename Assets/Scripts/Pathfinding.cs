@@ -23,6 +23,11 @@ public class Pathfinding : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Находит путь
+    /// </summary>
+    /// <param name="startPos">Стартовая позиция</param>
+    /// <param name="targetPos">Позиция цели</param>
     private void FindPath(Vector3 startPos, Vector3 targetPos)
     {
         Stopwatch sw = new Stopwatch();
@@ -78,12 +83,13 @@ public class Pathfinding : MonoBehaviour
 
         while (currentNode != startNode)
         {
+            // Применяем гравитацию
             Node gravityNode = currentNode;
             if (Physics.Raycast(currentNode.worldPosition, -Vector3.up, out hit, Mathf.Infinity, grid.UnwalkableMask))
             {
                 gravityNode = grid.NodeFromWorldPosition(new Vector3(currentNode.worldPosition.x, hit.transform.position.y + grid.NodeRadius + seeker.localScale.y / 2, currentNode.worldPosition.z));
             }
-
+            ///////////////////////
             path.Add(gravityNode);
             currentNode = currentNode.parent;
         }
@@ -91,6 +97,12 @@ public class Pathfinding : MonoBehaviour
         grid.path = path;
     }
 
+    /// <summary>
+    /// Находит дистанцию между двумя Node-ами
+    /// </summary>
+    /// <param name="nodeA">Первая Node-а</param>
+    /// <param name="nodeB">Вторая Node-а</param>
+    /// <returns>Дистанция</returns>
     private float GetDistance(Node nodeA, Node nodeB)
     {
         int dstX = Mathf.Abs(nodeA.gridX - nodeB.gridX);
