@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Pathfinder
 {
-    private static Grid grid;
+    private static GridController grid;
     private static List<Node> path;
 
     /// <summary>
@@ -11,9 +11,9 @@ public class Pathfinder
     /// </summary>
     /// <param name="startPos">Стартовая позиция</param>
     /// <param name="targetPos">Позиция цели</param>
-    public static List<Node> FindPath(Vector3 startPos, Vector3 targetPos)
+    public static List<Node> FindPath(Vector3 startPos, Vector3 targetPos, int countCrossingNodes)
     {
-        grid = GameObject.Find("Grid").GetComponent<Grid>();
+        grid = GameObject.Find("GridController").GetComponent<GridController>();
         //grid.GridUpdate();
         path = new List<Node>();
         Node startNode = grid.NodeFromWorldPosition(startPos);
@@ -30,7 +30,7 @@ public class Pathfinder
 
             if(currentNode == targetNode)
             {
-                RetracePath(startNode, targetNode);
+                RetracePath(startNode, targetNode, countCrossingNodes);
                 return path;
             }
 
@@ -58,7 +58,7 @@ public class Pathfinder
         return path;
     }
 
-    private static void RetracePath(Node startNode, Node endNode)
+    private static void RetracePath(Node startNode, Node endNode, int countCrossingNodes)
     {
         Node currentNode = endNode;
         RaycastHit hit;
@@ -69,14 +69,35 @@ public class Pathfinder
             Node gravityNode = currentNode;
             if (Physics.Raycast(currentNode.worldPosition, -Vector3.up, out hit, Mathf.Infinity, grid.UnwalkableMask)) // Заменить на Frame
             {
-                gravityNode = grid.NodeFromWorldPosition(new Vector3(currentNode.worldPosition.x, hit.transform.position.y/* + seeker.localScale.y / 2*/, currentNode.worldPosition.z));
+                gravityNode = grid.NodeFromWorldPosition(new Vector3(currentNode.worldPosition.x, hit.transform.position.y + 0.1f/* + seeker.localScale.y / 2*/, currentNode.worldPosition.z));
             }
             ///////////////////////
             path.Add(gravityNode);
             currentNode = currentNode.parent;
         }
         path.Reverse();
-        //grid.path = path;
+
+        //if (path.Count > countCrossingNodes * 3 + 1)
+        //{
+        //    for (int i = 0; i < path.Count; i++)
+        //    {
+        //        if (i < path.Count - 1 + countCrossingNodes)
+        //        {
+        //            if (path[i].worldPosition.y > path[i + 1].worldPosition.y)
+        //            {
+        //                path.RemoveRange(i + 1, countCrossingNodes);
+        //            }
+        //        }
+
+        //        if (i > countCrossingNodes)
+        //        {
+        //            if (path[i].worldPosition.y < path[i + 1].worldPosition.y)
+        //            {
+        //                path.RemoveRange(i + 1 - countCrossingNodes, countCrossingNodes);
+        //            }
+        //        }
+        //    }
+        //}
     }
 
     /// <summary>
