@@ -89,9 +89,15 @@ public class GridController : MonoBehaviour
         gridSizeZ = Mathf.RoundToInt(gridWorldSize.z / nodeDiameter);
 
         grid = new Node[gridSizeX, gridSizeY, gridSizeZ];
+        
+        GridArrayUpdate();
+    }
 
-        ///// заполнение массива grid /////
-
+    /// <summary>
+    /// Заполнение массива grid
+    /// </summary>
+    private void GridArrayUpdate()
+    {
         Vector3 worldBottomLeft = transform.position - Vector3.right * gridWorldSize.x / 2 - Vector3.up * gridWorldSize.y / 2 - Vector3.forward * gridWorldSize.z / 2;
         for (int x = 0; x < gridSizeX; x++)
         {
@@ -105,11 +111,6 @@ public class GridController : MonoBehaviour
                 }
             }
         }
-    }
-
-    private void GridArrayUpdate()
-    {
-
     }
 
     /// <summary>

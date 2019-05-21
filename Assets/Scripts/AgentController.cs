@@ -73,7 +73,7 @@ public class AgentController : MonoBehaviour
             else
                 currentAgent.targetIndex = Random.Range(0, targetController.SaveTargets.Count);
 
-        currentAgent.path = Pathfinder.FindPath(currentAgent.agent.position, targetController.SaveTargets[currentAgent.targetIndex].transform.position, countCrossingNodes);
+        currentAgent.path = New.Pathfinder.FindPath(currentAgent.agent.position, targetController.SaveTargets[currentAgent.targetIndex].transform.position);
         StopCoroutine(FollowPath());
         StartCoroutine(FollowPath());
         currentAgent.oldTargetIndex = currentAgent.targetIndex;
@@ -82,7 +82,7 @@ public class AgentController : MonoBehaviour
     private IEnumerator FollowPath()
     {
         int targetIndex = 0;
-        Vector3 currentWaypoint = currentAgent.path[targetIndex].worldPosition;
+        Vector3 currentWaypoint = currentAgent.path[targetIndex].position;
 
         while (true)
         {
@@ -93,7 +93,7 @@ public class AgentController : MonoBehaviour
                 {
                     yield break;
                 }
-                currentWaypoint = currentAgent.path[targetIndex].worldPosition;
+                currentWaypoint = currentAgent.path[targetIndex].position;
             }
             currentAgent.prefab.transform.position = Vector3.MoveTowards(currentAgent.prefab.transform.position, currentWaypoint, currentAgent.speed * Time.deltaTime);
             yield return null;
@@ -107,7 +107,7 @@ public class AgentController : MonoBehaviour
             foreach(Node n in currentAgent.path)
             {
                 Gizmos.color = new Color(255, 247, 157);
-                Gizmos.DrawCube(n.worldPosition, Vector3.one/10);
+                Gizmos.DrawCube(n.position, Vector3.one/10);
             }
         }
     }

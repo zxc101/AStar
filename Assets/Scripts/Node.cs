@@ -5,7 +5,7 @@ using UnityEngine;
 public class Node : IHeapItem<Node>
 {
     public bool walkable;
-    public Vector3 worldPosition;
+    public Vector3 position;
     public int gridX;
     public int gridY;
     public int gridZ;
@@ -22,10 +22,15 @@ public class Node : IHeapItem<Node>
     public Node(bool _walkable, Vector3 _worldPos, int _gridX, int _gridY, int _gridZ)
     {
         walkable = _walkable;
-        worldPosition = _worldPos;
+        position = _worldPos;
         gridX = _gridX;
         gridY = _gridY;
         gridZ = _gridZ;
+    }
+
+    public Node(Vector3 _position)
+    {
+        position = _position;
     }
 
     public int CompareTo(Node nodeToCompare)

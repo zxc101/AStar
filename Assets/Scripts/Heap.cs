@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using System;
+﻿using System;
 
 public class Heap<T> where T : IHeapItem<T>
 {
@@ -125,9 +122,4 @@ public class Heap<T> where T : IHeapItem<T>
         itemA.HeapIndex = itemB.HeapIndex;
         itemB.HeapIndex = itemAIndex;
     }
-}
-
-public interface IHeapItem<T> : IComparable<T>
-{
-    int HeapIndex { get; set; }
 }

@@ -67,9 +67,9 @@ public class Pathfinder
         {
             // Применяем гравитацию
             Node gravityNode = currentNode;
-            if (Physics.Raycast(currentNode.worldPosition, -Vector3.up, out hit, Mathf.Infinity, grid.UnwalkableMask)) // Заменить на Frame
+            if (Physics.Raycast(currentNode.position, -Vector3.up, out hit, Mathf.Infinity, grid.UnwalkableMask)) // Заменить на Frame
             {
-                gravityNode = grid.NodeFromWorldPosition(new Vector3(currentNode.worldPosition.x, hit.transform.position.y + 0.1f/* + seeker.localScale.y / 2*/, currentNode.worldPosition.z));
+                gravityNode = grid.NodeFromWorldPosition(new Vector3(currentNode.position.x, hit.transform.position.y + 0.1f/* + seeker.localScale.y / 2*/, currentNode.position.z));
             }
             ///////////////////////
             path.Add(gravityNode);
