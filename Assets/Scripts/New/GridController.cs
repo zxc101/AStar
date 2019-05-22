@@ -91,9 +91,18 @@ namespace New
         /// <returns></returns>
         private Node CreateNewNode(Vector3 position)
         {
-            if (saveNodes.Count == 0) return new Node(position);
+            Node node;
+            if (saveNodes.Count == 0)
+            {
+                node = new Node(position);
+                saveNodes.Add(node);
+                return node;
+            }
+
             position = CorrectPosition(position);
-            Node node = FindingNearestNode(position);
+            node = FindingNearestNode(position);
+
+            print($"{saveNodes}: {saveNodes.Count}");
 
             if (node.position != position)
             {
