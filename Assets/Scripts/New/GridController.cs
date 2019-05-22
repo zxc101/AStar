@@ -102,8 +102,6 @@ namespace New
             position = CorrectPosition(position);
             node = FindingNearestNode(position);
 
-            print($"{saveNodes}: {saveNodes.Count}");
-
             if (node.position != position)
             {
                 node = new Node(position);
@@ -118,19 +116,49 @@ namespace New
 
             Vector3 position = FindingNearestNode(finishPosition).position;
 
-            while (position.x < finishPosition.x)
+            if(position.x < finishPosition.x)
             {
-                position.x += nodeDiameter;
+                while (position.x < finishPosition.x)
+                {
+                    position.x += nodeDiameter;
+                }
+            }
+            else if(position.x > finishPosition.x)
+            {
+                while (position.x > finishPosition.x)
+                {
+                    position.x -= nodeDiameter;
+                }
             }
 
-            while (position.y < finishPosition.y)
+            if (position.y < finishPosition.y)
             {
-                position.y += nodeDiameter;
+                while (position.y < finishPosition.y)
+                {
+                    position.y += nodeDiameter;
+                }
+            }
+            else if (position.y > finishPosition.y)
+            {
+                while (position.y > finishPosition.y)
+                {
+                    position.y -= nodeDiameter;
+                }
             }
 
-            while (position.z < finishPosition.z)
+            if (position.z < finishPosition.z)
             {
-                position.z += nodeDiameter;
+                while (position.z < finishPosition.z)
+                {
+                    position.z += nodeDiameter;
+                }
+            }
+            else if (position.z > finishPosition.z)
+            {
+                while (position.z > finishPosition.z)
+                {
+                    position.z -= nodeDiameter;
+                }
             }
 
             return position;

@@ -13,27 +13,27 @@ namespace New
         {
             grid = GameObject.Find("NewGridController").GetComponent<GridController>();
 
-            Node startNode = grid.NodeFromWorldPosition(startPos);
+            Node seekerNode = grid.NodeFromWorldPosition(startPos);
             Node targetNode = grid.NodeFromWorldPosition(targetPos);
 
-            Node currentNode = startNode;
+            Node currentNode = seekerNode;
             currentNode.gCost = 0;
-            currentNode.parent = startNode;
+            currentNode.parent = seekerNode;
 
             Node[] neighboursNodes;
 
             List<Node> closeNodes = new List<Node>();
             List<Node> path = new List<Node>();
 
-            closeNodes.Add(startNode);
+            closeNodes.Add(seekerNode);
 
             while (currentNode.position != targetNode.position)
             {
-                neighboursNodes = grid.GetNeighbours(startNode);
+                neighboursNodes = grid.GetNeighbours(seekerNode);
                 for (int i = 0; i < neighboursNodes.Length; i++)
                 {
                     if (IsWalkable(neighboursNodes[i].position)) continue;
-                    neighboursNodes[i].gCost = currentNode.gCost + GetDistance(neighboursNodes[i], startNode);
+                    neighboursNodes[i].gCost = currentNode.gCost + GetDistance(neighboursNodes[i], seekerNode);
                     neighboursNodes[i].hCost = GetDistance(neighboursNodes[i], targetNode);
                     neighboursNodes[i].parent = currentNode;
                     closeNodes.Add(neighboursNodes[i]);
@@ -41,11 +41,13 @@ namespace New
                 currentNode = FindingCurrentNode(closeNodes);
             }
 
-            while (currentNode != startNode)
-            {
+            do {
                 path.Add(currentNode);
                 currentNode = currentNode.parent;
-            }
+            } while (currentNode != seekerNode);
+
+            //    path.Add(targetNode);
+            //path.Add(seekerNode);
 
             return path;
         }

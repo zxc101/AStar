@@ -4,18 +4,25 @@ using UnityEngine;
 
 public class Test : MonoBehaviour
 {
-    public bool IsShowTransformNode;
-    public bool IsShowNeighboursNode;
+    //public bool IsShowTransformNode;
+    //public bool IsShowNeighboursNode;
+    public Transform seeker;
+    public Transform target;
 
     private static New.GridController grid;
 
+    //private void OnValidate()
+    //{
+    //    grid = GameObject.Find("NewGridController").GetComponent<New.GridController>();
+    //}
+
     void Start()
     {
-        //grid = GameObject.Find("NewGridController").GetComponent<New.GridController>();
-        //Node startNode = grid.NodeFromWorldPosition(new Vector3(5, 3, 1));
-        //Node targetNode = grid.NodeFromWorldPosition(new Vector3(7.3f, 6.8f, 2.5f));
-        //print(startNode.position);
-        //print(targetNode.position);
+        grid = GameObject.Find("NewGridController").GetComponent<New.GridController>();
+        Node seekerNode = grid.NodeFromWorldPosition(seeker.position);
+        Node targetNode = grid.NodeFromWorldPosition(target.position);
+        print($"Seeker: {seekerNode.position}");
+        print($"Target: {targetNode.position}");
 
         ///////////////////////////////////////////////////////////////////////////////////
 
@@ -28,13 +35,15 @@ public class Test : MonoBehaviour
 
     //private void OnDrawGizmos()
     //{
-    //    grid = GameObject.Find("NewGridController").GetComponent<New.GridController>();
-    //    foreach (Node n in grid.GetNeighbours(grid.NodeFromWorldPosition(transform.position)))
-    //    {
-    //        Gizmos.color = Color.cyan;
-    //        Gizmos.DrawCube(n.position, Vector3.one);
-    //    }
+        //Gizmos.color = Color.blue;
+        //Gizmos.DrawCube(grid.NodeFromWorldPosition(seeker.position).position, Vector3.one * 0.3f);
+        //Gizmos.color = Color.yellow;
+        //Gizmos.DrawCube(grid.NodeFromWorldPosition(target.position).position, Vector3.one * 0.3f);
+        //    grid = GameObject.Find("NewGridController").GetComponent<New.GridController>();
+        //    foreach (Node n in grid.GetNeighbours(grid.NodeFromWorldPosition(transform.position)))
+        //    {
+        //        Gizmos.color = Color.cyan;
+        //        Gizmos.DrawCube(n.position, Vector3.one);
+        //    }
     //}
-
-
 }
