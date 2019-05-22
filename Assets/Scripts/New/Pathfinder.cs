@@ -7,11 +7,11 @@ namespace New
 {
     public class Pathfinder
     {
-        private static New.GridController grid;
+        private static GridController grid;
 
         public static List<Node> FindPath(Vector3 startPos, Vector3 targetPos)
         {
-            grid = GameObject.Find("NewGridController").GetComponent<New.GridController>();
+            grid = GameObject.Find("NewGridController").GetComponent<GridController>();
 
             Node startNode = grid.NodeFromWorldPosition(startPos);
             Node targetNode = grid.NodeFromWorldPosition(targetPos);

@@ -10,7 +10,6 @@ public class AgentController : MonoBehaviour
 
     private AgentStruct currentAgent;
 
-    private GridController gridController;
     private TargetController targetController;
     private RaycastHit hit;
 
@@ -28,7 +27,6 @@ public class AgentController : MonoBehaviour
 
     void Start()
     {
-        gridController = transform.parent.Find("GridController").GetComponent<GridController>();
         targetController = transform.parent.Find("TargetController").GetComponent<TargetController>();
     }
 
@@ -45,8 +43,6 @@ public class AgentController : MonoBehaviour
             currentAgent.agent = currentAgent.prefab.transform.Find("Rig_Cat_Lite/Master/BackBone_03/BackBone_02/BackBone_01") != null ?
                 currentAgent.prefab.transform.Find("Rig_Cat_Lite/Master/BackBone_03/BackBone_02/BackBone_01") : currentAgent.prefab.transform;
             currentAgent.speed = speed;
-
-            gridController.GridUpdate();
         }
     }
 
@@ -73,7 +69,7 @@ public class AgentController : MonoBehaviour
             else
                 currentAgent.targetIndex = Random.Range(0, targetController.SaveTargets.Count);
 
-        currentAgent.path = Pathfinder.FindPath(currentAgent.agent.position, targetController.SaveTargets[currentAgent.targetIndex].transform.position);
+        currentAgent.path = New.Pathfinder.FindPath(currentAgent.agent.position, targetController.SaveTargets[currentAgent.targetIndex].transform.position);
         StopCoroutine(FollowPath());
         StartCoroutine(FollowPath());
         currentAgent.oldTargetIndex = currentAgent.targetIndex;

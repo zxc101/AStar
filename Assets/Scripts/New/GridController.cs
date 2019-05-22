@@ -11,7 +11,7 @@ namespace New
         private List<Node> saveNodes;
         private float nodeDiameter;
 
-        void Start()
+        void Awake()
         {
             saveNodes = new List<Node>();
             nodeDiameter = nodeRadius * 2;
@@ -70,6 +70,7 @@ namespace New
         /// <returns>Node соответствующий заданной позиции</returns>
         public Node NodeFromWorldPosition(Vector3 position)
         {
+            if(saveNodes.Count == 0) return CreateNewNode(position);
             // Пытается найти Node по заданной позиции
             Node node = saveNodes.Find((x) => x.position == CorrectPosition(position));
 
