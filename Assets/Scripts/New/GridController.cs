@@ -111,28 +111,16 @@ namespace New
             while (position.x < finishPosition.x)
             {
                 position.x += nodeDiameter;
-                //if (FindingNearestNode(position) == null)
-                //{
-                //    saveNodes.Add(new Node(position));
-                //}
             }
 
             while (position.y < finishPosition.y)
             {
                 position.y += nodeDiameter;
-                //if (FindingNearestNode(position) == null)
-                //{
-                //    saveNodes.Add(new Node(position));
-                //}
             }
 
             while (position.z < finishPosition.z)
             {
                 position.z += nodeDiameter;
-                //if (FindingNearestNode(position) == null)
-                //{
-                //    saveNodes.Add(new Node(position));
-                //}
             }
 
             return position;

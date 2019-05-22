@@ -11,7 +11,7 @@ public class Pathfinder
     /// </summary>
     /// <param name="startPos">Стартовая позиция</param>
     /// <param name="targetPos">Позиция цели</param>
-    public static List<Node> FindPath(Vector3 startPos, Vector3 targetPos, int countCrossingNodes)
+    public static List<Node> FindPath(Vector3 startPos, Vector3 targetPos)
     {
         grid = GameObject.Find("GridController").GetComponent<GridController>();
         //grid.GridUpdate();
@@ -30,7 +30,7 @@ public class Pathfinder
 
             if(currentNode == targetNode)
             {
-                RetracePath(startNode, targetNode, countCrossingNodes);
+                RetracePath(startNode, targetNode);
                 return path;
             }
 
@@ -58,7 +58,7 @@ public class Pathfinder
         return path;
     }
 
-    private static void RetracePath(Node startNode, Node endNode, int countCrossingNodes)
+    private static void RetracePath(Node startNode, Node endNode)
     {
         Node currentNode = endNode;
         RaycastHit hit;
@@ -76,28 +76,6 @@ public class Pathfinder
             currentNode = currentNode.parent;
         }
         path.Reverse();
-
-        //if (path.Count > countCrossingNodes * 3 + 1)
-        //{
-        //    for (int i = 0; i < path.Count; i++)
-        //    {
-        //        if (i < path.Count - 1 + countCrossingNodes)
-        //        {
-        //            if (path[i].worldPosition.y > path[i + 1].worldPosition.y)
-        //            {
-        //                path.RemoveRange(i + 1, countCrossingNodes);
-        //            }
-        //        }
-
-        //        if (i > countCrossingNodes)
-        //        {
-        //            if (path[i].worldPosition.y < path[i + 1].worldPosition.y)
-        //            {
-        //                path.RemoveRange(i + 1 - countCrossingNodes, countCrossingNodes);
-        //            }
-        //        }
-        //    }
-        //}
     }
 
     /// <summary>

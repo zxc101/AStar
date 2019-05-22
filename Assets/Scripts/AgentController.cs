@@ -73,7 +73,7 @@ public class AgentController : MonoBehaviour
             else
                 currentAgent.targetIndex = Random.Range(0, targetController.SaveTargets.Count);
 
-        currentAgent.path = New.Pathfinder.FindPath(currentAgent.agent.position, targetController.SaveTargets[currentAgent.targetIndex].transform.position);
+        currentAgent.path = Pathfinder.FindPath(currentAgent.agent.position, targetController.SaveTargets[currentAgent.targetIndex].transform.position);
         StopCoroutine(FollowPath());
         StartCoroutine(FollowPath());
         currentAgent.oldTargetIndex = currentAgent.targetIndex;
