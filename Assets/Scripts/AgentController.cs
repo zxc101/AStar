@@ -70,6 +70,10 @@ public class AgentController : MonoBehaviour
                 currentAgent.targetIndex = Random.Range(0, targetController.SaveTargets.Count);
 
         currentAgent.path = New.Pathfinder.FindPath(currentAgent.agent.position, targetController.SaveTargets[currentAgent.targetIndex].transform.position);
+        //foreach(Node n in currentAgent.path)
+        //{
+        //    print(n.position);
+        //}
         StopCoroutine(FollowPath());
         StartCoroutine(FollowPath());
         currentAgent.oldTargetIndex = currentAgent.targetIndex;

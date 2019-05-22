@@ -32,7 +32,7 @@ namespace New
                 neighboursNodes = grid.GetNeighbours(seekerNode);
                 for (int i = 0; i < neighboursNodes.Length; i++)
                 {
-                    if (IsWalkable(neighboursNodes[i].position)) continue;
+                    if (!IsWalkable(neighboursNodes[i].position)) continue;
                     neighboursNodes[i].gCost = currentNode.gCost + GetDistance(neighboursNodes[i], seekerNode);
                     neighboursNodes[i].hCost = GetDistance(neighboursNodes[i], targetNode);
                     neighboursNodes[i].parent = currentNode;
