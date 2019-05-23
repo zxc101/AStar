@@ -95,7 +95,7 @@ namespace New
             float dstY = Mathf.Abs(nodeA.position.y - nodeB.position.y);
             float dstZ = Mathf.Abs(nodeA.position.z - nodeB.position.z);
 
-            return Mathf.Pow(dstX, 2) + Mathf.Pow(dstY, 2) + Mathf.Pow(dstZ, 2);
+            return Mathf.Sqrt(Mathf.Pow(dstX, 2) + Mathf.Pow(dstY, 2) + Mathf.Pow(dstZ, 2));
         }
     }
 }
