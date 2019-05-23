@@ -4,6 +4,7 @@ using UnityEngine;
 public class SeekerController : MonoBehaviour
 {
     [SerializeField] private GameObject seeker;
+    [SerializeField] private Transform agent;
     [SerializeField] private int speed = 1;
     [SerializeField] private int countCrossingNodes;
 

@@ -91,9 +91,9 @@ namespace New
 
         private static float GetDistance(Node nodeA, Node nodeB)
         {
-            int dstX = Mathf.Abs(nodeA.gridX - nodeB.gridX);
-            int dstY = Mathf.Abs(nodeA.gridY - nodeB.gridY);
-            int dstZ = Mathf.Abs(nodeA.gridZ - nodeB.gridZ);
+            float dstX = Mathf.Abs(nodeA.position.x - nodeB.position.x);
+            float dstY = Mathf.Abs(nodeA.position.y - nodeB.position.y);
+            float dstZ = Mathf.Abs(nodeA.position.z - nodeB.position.z);
 
             return Mathf.Pow(dstX, 2) + Mathf.Pow(dstY, 2) + Mathf.Pow(dstZ, 2);
         }
