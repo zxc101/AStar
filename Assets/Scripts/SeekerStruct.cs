@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public struct AgentStruct
+public struct SeekerStruct
 {
     public float speed;
     public GameObject prefab;
-    public Transform agent;
+    public Transform seeker;
     public List<Node> path;
     public int targetIndex;
     public int oldTargetIndex;

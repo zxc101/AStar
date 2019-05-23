@@ -3,25 +3,25 @@ using UnityEngine;
 
 public class InputController : MonoBehaviour
 {
-    [SerializeField] private InputEnum spawnAgent;
-    [SerializeField] private InputEnum destroyAgent;
-    [SerializeField] private InputEnum moveAgent;
+    [SerializeField] private InputEnum spawnSeeker;
+    [SerializeField] private InputEnum destroySeeker;
+    [SerializeField] private InputEnum moveSeeker;
     [SerializeField] private InputEnum spawnTarget;
     [SerializeField] private InputEnum destroyTarget;
 
-    private Action actionSpawnAgent;
-    private Action actionDestroyAgent;
-    private Action actionMoveAgent;
+    private Action actionSpawnSeeker;
+    private Action actionDestroySeeker;
+    private Action actionMoveSeeker;
     private Action actionSpawnTarget;
     private Action actionDestroyTarget;
 
     private void OnValidate()
     {
-        AgentController agentController = transform.parent.Find("AgentController").GetComponent<AgentController>();
+        SeekerController seekerController = transform.parent.Find("SeekerController").GetComponent<SeekerController>();
 
-        actionSpawnAgent = agentController.SpawnAgent;
-        actionDestroyAgent = agentController.DestroyAgent;
-        actionMoveAgent = agentController.StartMove;
+        actionSpawnSeeker = seekerController.SpawnAgent;
+        actionDestroySeeker = seekerController.DestroyAgent;
+        actionMoveSeeker = seekerController.StartMove;
 
         TargetController targetController = transform.parent.Find("TargetController").GetComponent<TargetController>();
 
@@ -31,9 +31,9 @@ public class InputController : MonoBehaviour
 
     private void Update()
     {
-        InputMove(spawnAgent, actionSpawnAgent);
-        InputMove(destroyAgent, actionDestroyAgent);
-        InputMove(moveAgent, actionMoveAgent);
+        InputMove(spawnSeeker, actionSpawnSeeker);
+        InputMove(destroySeeker, actionDestroySeeker);
+        InputMove(moveSeeker, actionMoveSeeker);
         InputMove(spawnTarget, actionSpawnTarget);
         InputMove(destroyTarget, actionDestroyTarget);
     }

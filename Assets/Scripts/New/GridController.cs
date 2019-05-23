@@ -76,12 +76,9 @@ namespace New
 
             if (node == null)
             {
-                return CreateNewNode(position);
+                node = CreateNewNode(position);
             }
-            else
-            {
-                return node;
-            }
+            return node;
         }
 
         /// <summary>

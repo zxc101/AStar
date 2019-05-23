@@ -4,111 +4,61 @@ using UnityEngine;
 
 public class AgentController : MonoBehaviour
 {
-    [SerializeField] private GameObject agent;
-    [SerializeField] private int speed = 1;
-    [SerializeField] private int countCrossingNodes;
+    private const float radius = 0.2f;
 
-    private AgentStruct currentAgent;
-
-    private TargetController targetController;
+    public float speed = 1;
+    private Ray ray;
     private RaycastHit hit;
 
-    private void OnValidate()
+    private bool moveComplete = true;
+
+    private void Update()
     {
-        if (speed < 1)
+        if (Input.GetButtonDown("Fire1"))
         {
-            speed = 1;
-        }
-        if(countCrossingNodes < 0)
-        {
-            countCrossingNodes = 0;
+            MouseClick();
         }
     }
 
-    void Start()
+    private void MouseClick()
     {
-        targetController = transform.parent.Find("TargetController").GetComponent<TargetController>();
-    }
+        ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-    public void SpawnAgent()
-    {
-        if (currentAgent.prefab == null)
+        if(Physics.Raycast(ray, out hit))
         {
-            currentAgent.prefab = Instantiate(agent, new Vector3(Random.Range(-3.1f, 2.4f), 1.8f, Random.Range(3, 3.7f)), Quaternion.Euler(0, 180, 0));
-            if (Physics.Raycast(currentAgent.prefab.transform.position, -Vector3.up, out hit, Mathf.Infinity, 1 << LayerMask.NameToLayer("Frame")))
+            if(hit.transform.tag == "Finish")
             {
-                currentAgent.prefab.transform.position = Vector3.right * currentAgent.prefab.transform.position.x + Vector3.up * (hit.transform.position.y + currentAgent.prefab.transform.localScale.y * 3 / 4 ) + Vector3.forward * currentAgent.prefab.transform.position.z;
+                Move(hit.point);
             }
-            currentAgent.oldTargetIndex = -1;
-            currentAgent.agent = currentAgent.prefab.transform.Find("Rig_Cat_Lite/Master/BackBone_03/BackBone_02/BackBone_01") != null ?
-                currentAgent.prefab.transform.Find("Rig_Cat_Lite/Master/BackBone_03/BackBone_02/BackBone_01") : currentAgent.prefab.transform;
-            currentAgent.speed = speed;
         }
     }
 
-    public void DestroyAgent()
+    private void Move(Vector3 point)
     {
-        if(currentAgent.prefab != null)
+        if (!moveComplete)
         {
-            currentAgent.speed = 0;
-            currentAgent.targetIndex = 0;
-            currentAgent.oldTargetIndex = 0;
-            currentAgent.path = null;
-            currentAgent.agent = null;
-            Destroy(currentAgent.prefab);
+            StopCoroutine("MoveProc");
         }
+
+        StartCoroutine(MoveProc(point));
     }
 
-    public void StartMove()
+    private IEnumerator MoveProc(Vector3 point)
     {
-        currentAgent.targetIndex = Random.Range(0, targetController.SaveTargets.Count);
+        moveComplete = false;
 
-        while (currentAgent.oldTargetIndex == currentAgent.targetIndex)
-            if (targetController.SaveTargets.Count <= 1)
-                return;
-            else
-                currentAgent.targetIndex = Random.Range(0, targetController.SaveTargets.Count);
+        transform.LookAt(point + Vector3.up * transform.position.y);
 
-        currentAgent.path = New.Pathfinder.FindPath(currentAgent.agent.position, targetController.SaveTargets[currentAgent.targetIndex].transform.position);
-        //foreach(Node n in currentAgent.path)
-        //{
-        //    print(n.position);
-        //}
-        StopCoroutine(FollowPath());
-        StartCoroutine(FollowPath());
-        currentAgent.oldTargetIndex = currentAgent.targetIndex;
-    }
-
-    private IEnumerator FollowPath()
-    {
-        int targetIndex = 0;
-        Vector3 currentWaypoint = currentAgent.path[targetIndex].position;
-
-        while (true)
+        while (!moveComplete)
         {
-            if (currentAgent.prefab.transform.position == currentWaypoint)
+            transform.position += transform.forward * speed * Time.deltaTime;
+            if (Vector3.Distance(transform.position, point + Vector3.up * transform.position.y) < radius)
             {
-                targetIndex++;
-                if (targetIndex >= currentAgent.path.Count)
-                {
-                    yield break;
-                }
-                currentWaypoint = currentAgent.path[targetIndex].position;
+                moveComplete = true;
             }
-            currentAgent.prefab.transform.position = Vector3.MoveTowards(currentAgent.prefab.transform.position, currentWaypoint, currentAgent.speed * Time.deltaTime);
             yield return null;
         }
-    }
 
-    private void OnDrawGizmos()
-    {
-        if(currentAgent.path != null)
-        {
-            foreach(Node n in currentAgent.path)
-            {
-                Gizmos.color = new Color(255, 247, 157);
-                Gizmos.DrawCube(n.position, Vector3.one/10);
-            }
-        }
+        yield break;
     }
 }

@@ -32,11 +32,14 @@ namespace New
                 neighboursNodes = grid.GetNeighbours(seekerNode);
                 for (int i = 0; i < neighboursNodes.Length; i++)
                 {
-                    if (!IsWalkable(neighboursNodes[i].position)) continue;
-                    neighboursNodes[i].gCost = currentNode.gCost + GetDistance(neighboursNodes[i], seekerNode);
-                    neighboursNodes[i].hCost = GetDistance(neighboursNodes[i], targetNode);
-                    neighboursNodes[i].parent = currentNode;
-                    closeNodes.Add(neighboursNodes[i]);
+                    if (IsWalkable(neighboursNodes[i].position) ||
+                        !IsHaveNode(closeNodes, neighboursNodes[i]))
+                    {
+                        neighboursNodes[i].gCost = currentNode.gCost + GetDistance(neighboursNodes[i], seekerNode);
+                        neighboursNodes[i].hCost = GetDistance(neighboursNodes[i], targetNode);
+                        neighboursNodes[i].parent = currentNode;
+                        closeNodes.Add(neighboursNodes[i]);
+                    }
                 }
                 currentNode = FindingCurrentNode(closeNodes);
             }
@@ -68,6 +71,17 @@ namespace New
                                  select node2)
                     orderby node.hCost
                     select node).First();
+        }
+
+        /// <summary>
+        /// Проверяет List на наличие элемента
+        /// </summary>
+        /// <param name="list">Проверяемый список</param>
+        /// <param name="n">Искомый элемент</param>
+        /// <returns>Присутствие/Отсутствие объекта</returns>
+        private static bool IsHaveNode(List<Node> list, Node n)
+        {
+            return list.Find((x) => x == grid.NodeFromWorldPosition(n.position)) != null;
         }
 
         private static bool IsWalkable(Vector3 position)
