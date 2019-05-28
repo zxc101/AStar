@@ -3,15 +3,14 @@ using UnityEngine;
 
 public class SeekerController : MonoBehaviour
 {
-    [SerializeField] private GameObject seeker;
-    [SerializeField] private Transform agent;
+    [SerializeField] private GameObject agent;
     [SerializeField] private int speed = 1;
     [SerializeField] private int countCrossingNodes;
 
     private SeekerStruct currentSeeker;
 
     private TargetController targetController;
-    private GridController gridController;
+    //private New.GridController gridController;
     private RaycastHit hit;
 
     private void OnValidate()
@@ -29,23 +28,22 @@ public class SeekerController : MonoBehaviour
     void Start()
     {
         targetController = transform.parent.Find("TargetController").GetComponent<TargetController>();
-        gridController = transform.parent.Find("GridController").GetComponent<GridController>();
+        //gridController = transform.parent.Find("NewGridController").GetComponent<New.GridController>();
     }
 
     public void SpawnAgent()
     {
         if (currentSeeker.prefab == null)
         {
-            currentSeeker.prefab = Instantiate(seeker, new Vector3(Random.Range(-3.1f, 2.4f), 1.8f, Random.Range(3, 3.7f)), Quaternion.Euler(0, 180, 0));
+            currentSeeker.seeker = new Vector3(Random.Range(-3.1f, 2.4f), 1.8f, Random.Range(3, 3.7f));
+            currentSeeker.prefab = Instantiate(agent, currentSeeker.seeker, Quaternion.identity);
             if (Physics.Raycast(currentSeeker.prefab.transform.position, -Vector3.up, out hit, Mathf.Infinity, 1 << LayerMask.NameToLayer("Frame")))
             {
                 currentSeeker.prefab.transform.position = Vector3.right * currentSeeker.prefab.transform.position.x + Vector3.up * (hit.transform.position.y + currentSeeker.prefab.transform.localScale.y * 3 / 4 ) + Vector3.forward * currentSeeker.prefab.transform.position.z;
             }
             currentSeeker.oldTargetIndex = -1;
-            currentSeeker.seeker = currentSeeker.prefab.transform.Find("Rig_Cat_Lite/Master/BackBone_03/BackBone_02/BackBone_01") != null ?
-                currentSeeker.prefab.transform.Find("Rig_Cat_Lite/Master/BackBone_03/BackBone_02/BackBone_01") : currentSeeker.prefab.transform;
             currentSeeker.speed = speed;
-            gridController.GridUpdate();
+            //gridController.GridUpdate();
         }
     }
 
@@ -57,7 +55,7 @@ public class SeekerController : MonoBehaviour
             currentSeeker.targetIndex = 0;
             currentSeeker.oldTargetIndex = 0;
             currentSeeker.path = null;
-            currentSeeker.seeker = null;
+            currentSeeker.seeker = Vector3.zero;
             Destroy(currentSeeker.prefab);
         }
     }
@@ -72,10 +70,10 @@ public class SeekerController : MonoBehaviour
             else
                 currentSeeker.targetIndex = Random.Range(0, targetController.SaveTargets.Count);
 
-        currentSeeker.path = New.Pathfinder.FindPath(currentSeeker.seeker.position, targetController.SaveTargets[currentSeeker.targetIndex].transform.position);
-        StopCoroutine(FollowPath());
-        StartCoroutine(FollowPath());
-        currentSeeker.oldTargetIndex = currentSeeker.targetIndex;
+        currentSeeker.path = New.Pathfinder.FindPath(currentSeeker.seeker, targetController.SaveTargets[currentSeeker.targetIndex].transform.position);
+        //StopCoroutine(FollowPath());
+        //StartCoroutine(FollowPath());
+        //currentSeeker.oldTargetIndex = currentSeeker.targetIndex;
     }
 
     private IEnumerator FollowPath()
@@ -85,16 +83,30 @@ public class SeekerController : MonoBehaviour
 
         while (true)
         {
-            if (currentSeeker.prefab.transform.position == currentWaypoint)
+            currentSeeker.seeker = Vector3.MoveTowards(currentSeeker.seeker, currentWaypoint, currentSeeker.speed * Time.deltaTime);
+            currentSeeker.prefab.transform.position = currentSeeker.seeker;
+            if (currentSeeker.seeker == currentWaypoint &&
+                targetIndex < currentSeeker.path.Count - 1)
             {
                 targetIndex++;
-                if (targetIndex >= currentSeeker.path.Count)
-                {
-                    yield break;
-                }
                 currentWaypoint = currentSeeker.path[targetIndex].position;
+                //if (targetIndex >= currentSeeker.path.Count)
+                //{
+                //    yield break;
+                //}
+                //if(currentWaypoint.y == currentSeeker.path[targetIndex].position.y)
+                //{
+                //    print("stobile");
+                //}
+                //else if (currentWaypoint.y < currentSeeker.path[targetIndex].position.y)
+                //{
+                //    print("up");
+                //}
+                //else if (currentWaypoint.y > currentSeeker.path[targetIndex].position.y)
+                //{
+                //    print("down");
+                //}
             }
-            currentSeeker.prefab.transform.position = Vector3.MoveTowards(currentSeeker.prefab.transform.position, currentWaypoint, currentSeeker.speed * Time.deltaTime);
             yield return null;
         }
     }
@@ -103,10 +115,12 @@ public class SeekerController : MonoBehaviour
     {
         if(currentSeeker.path != null)
         {
-            foreach(Node n in currentSeeker.path)
+            for(int i = 0; i < currentSeeker.path.Count; i++)
             {
                 Gizmos.color = new Color(255, 247, 157);
-                Gizmos.DrawCube(n.position, Vector3.one/10);
+                Gizmos.DrawCube(currentSeeker.path[i].position, Vector3.one/10);
+                Gizmos.color = Color.red;
+                Gizmos.DrawLine(currentSeeker.path[i].position, currentSeeker.path[i].parent.position);
             }
         }
     }

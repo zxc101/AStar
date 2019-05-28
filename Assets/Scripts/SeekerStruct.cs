@@ -6,7 +6,7 @@ public struct SeekerStruct
 {
     public float speed;
     public GameObject prefab;
-    public Transform seeker;
+    public Vector3 seeker;
     public List<Node> path;
     public int targetIndex;
     public int oldTargetIndex;

@@ -17,7 +17,8 @@ namespace New
             Node targetNode = grid.NodeFromWorldPosition(targetPos);
 
             Node currentNode = seekerNode;
-            currentNode.gCost = 0;
+            currentNode.gCost = int.MaxValue;
+            currentNode.hCost = GetDistance(seekerNode, targetNode);
             currentNode.parent = seekerNode;
 
             Node[] neighboursNodes;
@@ -25,34 +26,37 @@ namespace New
             List<Node> closeNodes = new List<Node>();
             List<Node> path = new List<Node>();
 
-            closeNodes.Add(seekerNode);
+            closeNodes.Add(currentNode);
 
             while (currentNode.position != targetNode.position)
             {
-                neighboursNodes = grid.GetNeighbours(seekerNode);
+                neighboursNodes = grid.GetNeighbours(currentNode);
                 for (int i = 0; i < neighboursNodes.Length; i++)
                 {
                     if (IsWalkable(neighboursNodes[i].position) ||
-                        !IsHaveNode(closeNodes, neighboursNodes[i]))
+                        SearchNode(closeNodes, neighboursNodes[i]) == null)
                     {
-                        neighboursNodes[i].gCost = currentNode.gCost + GetDistance(neighboursNodes[i], seekerNode);
+                        neighboursNodes[i].gCost = currentNode.gCost + GetDistance(currentNode, neighboursNodes[i]);
                         neighboursNodes[i].hCost = GetDistance(neighboursNodes[i], targetNode);
                         neighboursNodes[i].parent = currentNode;
                         closeNodes.Add(neighboursNodes[i]);
                     }
                 }
-                currentNode = FindingCurrentNode(closeNodes);
+                currentNode = FindingNextCurrentNode(closeNodes);
             }
+            
+            //currentNode = closeNodes[closeNodes.Count - 1];
 
-            do {
-                path.Add(currentNode);
-                currentNode = currentNode.parent;
-            } while (currentNode != seekerNode);
+            //do
+            //{
+            //    path.Add(currentNode);
+            //    currentNode = currentNode.parent;
+            //} while (currentNode != closeNodes[0]);
 
             //    path.Add(targetNode);
             //path.Add(seekerNode);
 
-            return path;
+            return closeNodes;
         }
 
         /// <summary>
@@ -62,15 +66,29 @@ namespace New
         /// </summary>
         /// <param name="list">List из которого ищем следующую Node</param>
         /// <returns>Следующий Node</returns>
-        private static Node FindingCurrentNode(List<Node> list)
+        private static Node FindingNextCurrentNode(List<Node> list)
         {
-            return (from node in (from node2 in list
-                                 where node2 == (from node3 in list
-                                                orderby node3.fCost
-                                                select node3).First()
-                                 select node2)
-                    orderby node.hCost
-                    select node).First();
+            Node nextCurrentNode = null;
+            if (list.Count > 0)
+            {
+                nextCurrentNode = list[0];
+                for (int i = 0; i < list.Count; i++)
+                {
+                    if(nextCurrentNode.CompareTo(list[i]) < 0)
+                    {
+                        nextCurrentNode = list[i];
+                    }
+                }
+            }
+            return nextCurrentNode;
+
+            //return (from node in (from node2 in list
+            //                     where node2 == (from node3 in list
+            //                                    orderby node3.fCost
+            //                                    select node3).First()
+            //                     select node2)
+            //        orderby node.hCost
+            //        select node).First();
         }
 
         /// <summary>
@@ -79,9 +97,17 @@ namespace New
         /// <param name="list">Проверяемый список</param>
         /// <param name="n">Искомый элемент</param>
         /// <returns>Присутствие/Отсутствие объекта</returns>
-        private static bool IsHaveNode(List<Node> list, Node n)
+        private static Node SearchNode(List<Node> list, Node n)
         {
-            return list.Find((x) => x == grid.NodeFromWorldPosition(n.position)) != null;
+            for (int i = 0; i < list.Count; i++)
+            {
+                if (list[i].position == n.position)
+                {
+                    return list[i];
+                }
+            }
+            return null;
+            //return list.Find((x) => x == grid.NodeFromWorldPosition(n.position)) != null;
         }
 
         private static bool IsWalkable(Vector3 position)

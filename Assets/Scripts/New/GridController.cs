@@ -24,41 +24,41 @@ namespace New
         /// <returns>Клетки по соседству</returns>
         public Node[] GetNeighbours(Node node)
         {
-            Node[] nodes = new Node[26];
+            Node[] nodes = new Node[6];
 
             // Верхние Nodes
             nodes[0] = NodeFromWorldPosition(node.position + Vector3.up * nodeDiameter);
-            nodes[1] = NodeFromWorldPosition(node.position + Vector3.up * nodeDiameter + Vector3.forward * nodeDiameter);
-            nodes[2] = NodeFromWorldPosition(node.position + Vector3.up * nodeDiameter + Vector3.back * nodeDiameter);
-            nodes[3] = NodeFromWorldPosition(node.position + Vector3.up * nodeDiameter + Vector3.left * nodeDiameter);
-            nodes[4] = NodeFromWorldPosition(node.position + Vector3.up * nodeDiameter + Vector3.right * nodeDiameter);
-            nodes[5] = NodeFromWorldPosition(node.position + Vector3.up * nodeDiameter + Vector3.forward * nodeDiameter + Vector3.left * nodeDiameter);
-            nodes[6] = NodeFromWorldPosition(node.position + Vector3.up * nodeDiameter + Vector3.forward * nodeDiameter + Vector3.right * nodeDiameter);
-            nodes[7] = NodeFromWorldPosition(node.position + Vector3.up * nodeDiameter + Vector3.back * nodeDiameter + Vector3.left * nodeDiameter);
-            nodes[8] = NodeFromWorldPosition(node.position + Vector3.up * nodeDiameter + Vector3.back * nodeDiameter + Vector3.right * nodeDiameter);
+            //nodes[1] = NodeFromWorldPosition(node.position + Vector3.up * nodeDiameter + Vector3.forward * nodeDiameter);
+            //nodes[2] = NodeFromWorldPosition(node.position + Vector3.up * nodeDiameter + Vector3.back * nodeDiameter);
+            //nodes[3] = NodeFromWorldPosition(node.position + Vector3.up * nodeDiameter + Vector3.left * nodeDiameter);
+            //nodes[4] = NodeFromWorldPosition(node.position + Vector3.up * nodeDiameter + Vector3.right * nodeDiameter);
+            //nodes[5] = NodeFromWorldPosition(node.position + Vector3.up * nodeDiameter + Vector3.forward * nodeDiameter + Vector3.left * nodeDiameter);
+            //nodes[6] = NodeFromWorldPosition(node.position + Vector3.up * nodeDiameter + Vector3.forward * nodeDiameter + Vector3.right * nodeDiameter);
+            //nodes[7] = NodeFromWorldPosition(node.position + Vector3.up * nodeDiameter + Vector3.back * nodeDiameter + Vector3.left * nodeDiameter);
+            //nodes[8] = NodeFromWorldPosition(node.position + Vector3.up * nodeDiameter + Vector3.back * nodeDiameter + Vector3.right * nodeDiameter);
 
             // Боковые Nodes
-            nodes[9] = NodeFromWorldPosition(node.position + Vector3.forward * nodeDiameter);
-            nodes[10] = NodeFromWorldPosition(node.position + Vector3.back * nodeDiameter);
-            nodes[11] = NodeFromWorldPosition(node.position + Vector3.left * nodeDiameter);
-            nodes[12] = NodeFromWorldPosition(node.position + Vector3.right * nodeDiameter);
+            nodes[1] = NodeFromWorldPosition(node.position + Vector3.forward * nodeDiameter);
+            nodes[2] = NodeFromWorldPosition(node.position + Vector3.back * nodeDiameter);
+            nodes[3] = NodeFromWorldPosition(node.position + Vector3.left * nodeDiameter);
+            nodes[4] = NodeFromWorldPosition(node.position + Vector3.right * nodeDiameter);
 
             // Боковые угловые Nodes
-            nodes[13] = NodeFromWorldPosition(node.position + Vector3.forward * nodeDiameter + Vector3.left * nodeDiameter);
-            nodes[14] = NodeFromWorldPosition(node.position + Vector3.forward * nodeDiameter + Vector3.right * nodeDiameter);
-            nodes[15] = NodeFromWorldPosition(node.position + Vector3.back * nodeDiameter + Vector3.left * nodeDiameter);
-            nodes[16] = NodeFromWorldPosition(node.position + Vector3.back * nodeDiameter + Vector3.right * nodeDiameter);
+            //nodes[13] = NodeFromWorldPosition(node.position + Vector3.forward * nodeDiameter + Vector3.left * nodeDiameter);
+            //nodes[14] = NodeFromWorldPosition(node.position + Vector3.forward * nodeDiameter + Vector3.right * nodeDiameter);
+            //nodes[15] = NodeFromWorldPosition(node.position + Vector3.back * nodeDiameter + Vector3.left * nodeDiameter);
+            //nodes[16] = NodeFromWorldPosition(node.position + Vector3.back * nodeDiameter + Vector3.right * nodeDiameter);
 
             // Нижние Nodes
-            nodes[17] = NodeFromWorldPosition(node.position + Vector3.down * nodeDiameter);
-            nodes[18] = NodeFromWorldPosition(node.position + Vector3.down * nodeDiameter + Vector3.forward * nodeDiameter);
-            nodes[19] = NodeFromWorldPosition(node.position + Vector3.down * nodeDiameter + Vector3.back * nodeDiameter);
-            nodes[20] = NodeFromWorldPosition(node.position + Vector3.down * nodeDiameter + Vector3.left * nodeDiameter);
-            nodes[21] = NodeFromWorldPosition(node.position + Vector3.down * nodeDiameter + Vector3.right * nodeDiameter);
-            nodes[22] = NodeFromWorldPosition(node.position + Vector3.down * nodeDiameter + Vector3.forward * nodeDiameter + Vector3.left * nodeDiameter);
-            nodes[23] = NodeFromWorldPosition(node.position + Vector3.down * nodeDiameter + Vector3.forward * nodeDiameter + Vector3.right * nodeDiameter);
-            nodes[24] = NodeFromWorldPosition(node.position + Vector3.down * nodeDiameter + Vector3.back * nodeDiameter + Vector3.left * nodeDiameter);
-            nodes[25] = NodeFromWorldPosition(node.position + Vector3.down * nodeDiameter + Vector3.back * nodeDiameter + Vector3.right * nodeDiameter);
+            nodes[5] = NodeFromWorldPosition(node.position + Vector3.down * nodeDiameter);
+            //nodes[18] = NodeFromWorldPosition(node.position + Vector3.down * nodeDiameter + Vector3.forward * nodeDiameter);
+            //nodes[19] = NodeFromWorldPosition(node.position + Vector3.down * nodeDiameter + Vector3.back * nodeDiameter);
+            //nodes[20] = NodeFromWorldPosition(node.position + Vector3.down * nodeDiameter + Vector3.left * nodeDiameter);
+            //nodes[21] = NodeFromWorldPosition(node.position + Vector3.down * nodeDiameter + Vector3.right * nodeDiameter);
+            //nodes[22] = NodeFromWorldPosition(node.position + Vector3.down * nodeDiameter + Vector3.forward * nodeDiameter + Vector3.left * nodeDiameter);
+            //nodes[23] = NodeFromWorldPosition(node.position + Vector3.down * nodeDiameter + Vector3.forward * nodeDiameter + Vector3.right * nodeDiameter);
+            //nodes[24] = NodeFromWorldPosition(node.position + Vector3.down * nodeDiameter + Vector3.back * nodeDiameter + Vector3.left * nodeDiameter);
+            //nodes[25] = NodeFromWorldPosition(node.position + Vector3.down * nodeDiameter + Vector3.back * nodeDiameter + Vector3.right * nodeDiameter);
 
             return nodes;
         }
@@ -161,13 +161,26 @@ namespace New
             return position;
         }
 
-        private Node FindingNearestNode(Vector3 position)
+        public Node FindingNearestNode(Vector3 position)
         {
-            return (from value in saveNodes
-                    orderby Mathf.Abs(value.position.x - position.x) +
-                    Mathf.Abs(value.position.y - position.y) +
-                    Mathf.Abs(value.position.z - position.z)
-                    select value).First();
+            Node n = new Node(Vector3.zero);
+            float distance = Mathf.Infinity;
+            for(int i = 0; i < saveNodes.Count; i++)
+            {
+                Vector3 diff = saveNodes[i].position - position;
+                float curDistance = diff.sqrMagnitude;
+                if(curDistance < distance)
+                {
+                    n = saveNodes[i];
+                    distance = curDistance;
+                }
+            }
+            return n;
+            //return (from value in saveNodes
+            //        orderby Mathf.Abs(value.position.x - position.x) +
+            //        Mathf.Abs(value.position.y - position.y) +
+            //        Mathf.Abs(value.position.z - position.z)
+            //        select value).First();
         }
     }
 }

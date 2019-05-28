@@ -61,21 +61,35 @@ public class Pathfinder
     private static void RetracePath(Node startNode, Node endNode)
     {
         Node currentNode = endNode;
-        RaycastHit hit;
 
         while (currentNode != startNode)
         {
-            // Применяем гравитацию
-            Node gravityNode = currentNode;
-            if (Physics.Raycast(currentNode.position, -Vector3.up, out hit, Mathf.Infinity, grid.UnwalkableMask)) // Заменить на Frame
+            if(currentNode == endNode ||
+               currentNode == startNode)
             {
-                gravityNode = grid.NodeFromWorldPosition(new Vector3(currentNode.position.x, hit.transform.position.y + 0.1f/* + seeker.localScale.y / 2*/, currentNode.position.z));
+                path.Add(Gravity(currentNode));
             }
-            ///////////////////////
-            path.Add(gravityNode);
+
+            if(Gravity(currentNode).position.y != Gravity(currentNode.parent).position.y)
+            {
+                path.Add(Gravity(currentNode));
+                path.Add(Gravity(currentNode.parent));
+            }
+
             currentNode = currentNode.parent;
         }
         path.Reverse();
+    }
+
+    private static Node Gravity(Node node)
+    {
+        RaycastHit hit;
+        Node gravityNode = node;
+        if (Physics.Raycast(node.position, -Vector3.up, out hit, Mathf.Infinity, grid.UnwalkableMask)) // Заменить на Frame
+        {
+            gravityNode = grid.NodeFromWorldPosition(new Vector3(node.position.x, hit.transform.position.y + 0.1f/* + seeker.localScale.y / 2*/, node.position.z));
+        }
+        return gravityNode;
     }
 
     /// <summary>
